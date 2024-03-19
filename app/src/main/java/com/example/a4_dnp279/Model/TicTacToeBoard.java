@@ -58,7 +58,7 @@ public class TicTacToeBoard {
         return null;
     }
 
-    public int numUnplayed() {
+    public int numUnplayedSquares() {
 
         int count = 0;
         for (int row = 0; row < board.length; row++) {
