@@ -6,6 +6,7 @@ import com.example.a4_dnp279.view.GridButtonView;
 import com.example.a4_dnp279.view.TextViewView;
 
 public class MainController {
+    // Declaring the game board, views, and game state variables
     private TicTacToeBoard board;
     private GridButtonView gridButtonView;
     private TextViewView textViewView;
@@ -16,61 +17,73 @@ public class MainController {
     private int numOWins;
     private int numDraws;
 
+    // Constructor initializes the starting marker and current marker
     public MainController(){
         this.startingMarker = Marker.X;
         this.currentMarker= startingMarker;
     }
 
+    // Setter for the GridButtonView
     public  void setGridButtonView(GridButtonView gridButtonView){
         this.gridButtonView= gridButtonView;
     }
 
+    // Getter for the current marker
+    public Marker getCurrentMarker(){
+        return currentMarker;
+    }
+
+    // Setter for the TextViewView
     public void setTextViewView(TextViewView textViewView){
         this.textViewView= textViewView;
     }
 
-    public void nextMove(int row, int col ){
-        board.setMarker(row,col,currentMarker);
+    // Method to handle the next move in the game
+    public void nextMove(int row, int col) {
+        // Set the marker at the specified position on the board
+        board.setMarker(row, col, currentMarker);
+
+        // Check if the current marker has a winning position
         if (board.winningPositions(currentMarker) != null) {
-            // If the current player has a winning position, the game is over
+            // If so, the game is over and the current marker wins
             gameOver = true;
-            // Update the win count for the current player
             if (currentMarker == Marker.X) {
                 numXWins++;
+                textViewView.displayXWins("X Wins: " + numXWins);
             } else {
                 numOWins++;
+                textViewView.displayOWins("O Wins: " + numOWins);
             }
-        } else
-            if (board.numUnplayedSquares() == 0) {
-            // If the board is full and there's no winner, it's a draw
+        } else if (board.numUnplayedSquares() == 0) {
+            // If there are no unplayed squares, the game is a draw
             gameOver = true;
             numDraws++;
+            textViewView.displayDraws("Draws: " + numDraws);
         } else {
-            // If the game is not over, switch to the other player
+            // Otherwise, switch the current marker and continue the game
             currentMarker = (currentMarker == Marker.X) ? Marker.O : Marker.X;
+            textViewView.displayStatus("Current Player: " + currentMarker);
         }
 
-
-        if(( ((board.winningPositions(currentMarker)) == null))){
-           gameOver = false;
-        }
-        else
-            if (board.numUnplayedSquares() == 0) {
+        // Check if the game is over
+        if (board.winningPositions(currentMarker) == null) {
+            gameOver = false;
+        } else if (board.numUnplayedSquares() == 0) {
             gameOver = true;
         }
     }
 
+    // Method to start a new game
     public void startNewGame() {
         // Switch the starting marker
         startingMarker = (startingMarker == Marker.X) ? Marker.O : Marker.X;
-
-        // The current marker is the starting marker at the start of the game
         currentMarker = startingMarker;
+
+        // Clear the board and update the views
         board.clearBoard();
-
-
+        textViewView.displayStatus("Current Player: " + currentMarker);
+        textViewView.displayXWins("X Wins: " + numXWins);
+        textViewView.displayOWins("O Wins: " + numOWins);
+        textViewView.displayDraws("Draws: " + numDraws);
     }
-
-
-
 }
